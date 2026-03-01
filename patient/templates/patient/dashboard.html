@@ -1,0 +1,83 @@
+{% extends 'patient/base_patient.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block breadcrumb %}Home / Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard-grid">
+    <div class="stats-card">
+        <div class="stat-icon">📋</div>
+        <div class="stat-info">
+            <h3>{{ total_appointments }}</h3>
+            <p>Total Appointments</p>
+        </div>
+    </div>
+
+    <div class="stats-card">
+        <div class="stat-icon">📅</div>
+        <div class="stat-info">
+            <h3>{{ upcoming_sessions }}</h3>
+            <p>Upcoming Sessions</p>
+        </div>
+    </div>
+
+    <div class="stats-card">
+        <div class="stat-icon">👨‍⚕️</div>
+        <div class="stat-info">
+            <h3>{{ total_doctors }}</h3>
+            <p>Available Doctors</p>
+        </div>
+    </div>
+</div>
+
+<div class="section">
+    <h2>Recent Appointments</h2>
+    {% if recent_appointments %}
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Appointment Number</th>
+                    <th>Session</th>
+                    <th>Doctor</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for appointment in recent_appointments %}
+                <tr>
+                    <td>{{ appointment.apponum|stringformat:"03d" }}</td>
+                    <td>{{ appointment.scheduleid.title }}</td>
+                    <td>{{ appointment.scheduleid.docid.docname }}</td>
+                    <td>{{ appointment.appodate }}</td>
+                    <td><span class="badge badge-success">Booked</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="no-data">No appointments yet. <a href="/patient/schedule/">Book your first appointment</a></p>
+    {% endif %}
+</div>
+
+<div class="quick-actions">
+    <h2>Quick Actions</h2>
+    <div class="action-buttons">
+        <a href="/patient/doctors/" class="action-btn">
+            <span>👨‍⚕️</span>
+            <span>Find a Doctor</span>
+        </a>
+        <a href="/patient/schedule/" class="action-btn">
+            <span>📅</span>
+            <span>Book Appointment</span>
+        </a>
+        <a href="/patient/appointment/" class="action-btn">
+            <span>📋</span>
+            <span>View My Bookings</span>
+        </a>
+    </div>
+</div>
+{% endblock %}

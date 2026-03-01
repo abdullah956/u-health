@@ -1,0 +1,83 @@
+{% extends 'patient/base_patient.html' %}
+
+{% block title %}Settings{% endblock %}
+
+{% block breadcrumb %}Home / Settings{% endblock %}
+
+{% block content %}
+<div class="section">
+    <div class="section-header">
+        <h2>Account Settings</h2>
+    </div>
+
+    {% if request.GET.updated %}
+    <div class="alert alert-success">
+        ✓ Account updated successfully!
+    </div>
+    {% endif %}
+
+    <div class="settings-container">
+        <div class="settings-section">
+            <h3>Personal Information</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Full Name:</span>
+                    <span class="info-value">{{ patient.pname }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Email:</span>
+                    <span class="info-value">{{ patient.pemail.email }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">NIC:</span>
+                    <span class="info-value">{{ patient.pnic }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Phone:</span>
+                    <span class="info-value">{{ patient.ptel }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Date of Birth:</span>
+                    <span class="info-value">{{ patient.pdob }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Address:</span>
+                    <span class="info-value">{{ patient.paddress }}</span>
+                </div>
+            </div>
+            <div class="settings-actions">
+                <a href="/patient/settings/edit/" class="btn btn-primary">Edit Information</a>
+            </div>
+        </div>
+
+        <div class="settings-section danger-zone">
+            <h3>Danger Zone</h3>
+            <p>Once you delete your account, there is no going back. Please be certain.</p>
+            <button onclick="showPopup('delete-confirm-popup')" class="btn btn-danger">Delete Account</button>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Popup -->
+<div id="delete-confirm-popup" class="popup-overlay">
+    <div class="popup-card">
+        <div class="popup-header">
+            <h3>Delete Account</h3>
+            <button onclick="closePopup('delete-confirm-popup')" class="close-btn">&times;</button>
+        </div>
+        <div class="popup-body">
+            <div class="warning-message">
+                <span class="warning-icon">⚠️</span>
+                <p><strong>Warning:</strong> This action cannot be undone. All your appointments and data will be permanently deleted.</p>
+            </div>
+        </div>
+        <div class="popup-footer">
+            <form method="POST" action="/patient/settings/delete/">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Yes, Delete My Account</button>
+                <button type="button" onclick="closePopup('delete-confirm-popup')" class="btn btn-secondary">Cancel</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

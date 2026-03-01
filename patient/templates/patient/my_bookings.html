@@ -1,0 +1,82 @@
+{% extends 'patient/base_patient.html' %}
+
+{% block title %}My Bookings{% endblock %}
+
+{% block breadcrumb %}Home / My Bookings{% endblock %}
+
+{% block content %}
+<div class="section">
+    <div class="section-header">
+        <h2>My Bookings ({{ appointments.count }})</h2>
+    </div>
+
+    <div class="filter-bar">
+        <form method="GET" action="/patient/appointment/" class="filter-form">
+            <input
+                type="date"
+                name="date"
+                value="{{ filter_date }}"
+                class="filter-input"
+            >
+            <button type="submit" class="btn btn-primary">Filter</button>
+            {% if filter_date %}
+            <a href="/patient/appointment/" class="btn btn-secondary">Clear Filter</a>
+            {% endif %}
+        </form>
+    </div>
+
+    {% if request.GET.cancelled %}
+    <div class="alert alert-success">
+        ✓ Appointment cancelled successfully!
+    </div>
+    {% endif %}
+
+    {% if appointments %}
+    <div class="bookings-grid">
+        {% for appointment in appointments %}
+        <div class="booking-card">
+            <div class="booking-header">
+                <div class="booking-ref">
+                    <span class="ref-label">Reference:</span>
+                    <span class="ref-number">OC-000-{{ appointment.appoid }}</span>
+                </div>
+                <div class="booking-date">
+                    Booked: {{ appointment.appodate }}
+                </div>
+            </div>
+            <div class="booking-body">
+                <h3>{{ appointment.scheduleid.title }}</h3>
+                <div class="booking-detail">
+                    <span class="icon">🎫</span>
+                    <span>Appointment No: <strong>{{ appointment.apponum|stringformat:"03d" }}</strong></span>
+                </div>
+                <div class="booking-detail">
+                    <span class="icon">👨‍⚕️</span>
+                    <span>{{ appointment.scheduleid.docid.docname }}</span>
+                </div>
+                <div class="booking-detail">
+                    <span class="icon">🏥</span>
+                    <span>{{ appointment.scheduleid.docid.specialties.sname }}</span>
+                </div>
+                <div class="booking-detail">
+                    <span class="icon">📅</span>
+                    <span>{{ appointment.scheduleid.scheduledate }}</span>
+                </div>
+                <div class="booking-detail">
+                    <span class="icon">🕐</span>
+                    <span>{{ appointment.scheduleid.scheduletime }}</span>
+                </div>
+            </div>
+            <div class="booking-footer">
+                <a href="/patient/appointment/cancel/{{ appointment.appoid }}/" class="btn btn-danger btn-block">
+                    Cancel Booking
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="no-data">You have no bookings yet. <a href="/patient/schedule/">Book an appointment</a></p>
+    {% endif %}
+</div>
+{% endblock %}

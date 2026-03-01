@@ -1,0 +1,61 @@
+{% extends 'doctor/base_doctor.html' %}
+
+{% block title %}Appointments{% endblock %}
+
+{% block breadcrumb %}Home / Appointments{% endblock %}
+
+{% block content %}
+<div class="section">
+    <div class="section-header">
+        <h2>Appointments ({{ appointments.count }})</h2>
+    </div>
+
+    <div class="filter-bar">
+        <form method="GET" action="/doctor/appointments/" class="filter-form">
+            <input
+                type="date"
+                name="date"
+                value="{{ filter_date }}"
+                class="filter-input"
+            >
+            <button type="submit" class="btn btn-primary">Filter</button>
+            {% if filter_date %}
+            <a href="/doctor/appointments/" class="btn btn-secondary">Clear Filter</a>
+            {% endif %}
+        </form>
+    </div>
+
+    {% if appointments %}
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Patient Name</th>
+                    <th>Patient Email</th>
+                    <th>Session Title</th>
+                    <th>Appointment No.</th>
+                    <th>Booking Date</th>
+                    <th>Scheduled Date</th>
+                    <th>Scheduled Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for appointment in appointments %}
+                <tr>
+                    <td>{{ appointment.pid.pname }}</td>
+                    <td>{{ appointment.pid.pemail.email }}</td>
+                    <td>{{ appointment.scheduleid.title }}</td>
+                    <td><span class="badge badge-info">{{ appointment.apponum|stringformat:"03d" }}</span></td>
+                    <td>{{ appointment.appodate }}</td>
+                    <td>{{ appointment.scheduleid.scheduledate }}</td>
+                    <td>{{ appointment.scheduleid.scheduletime }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="no-data">No appointments found. {% if filter_date %}Try clearing the filter.{% else %}Appointments will appear here once patients book your sessions.{% endif %}</p>
+    {% endif %}
+</div>
+{% endblock %}

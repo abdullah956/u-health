@@ -1,0 +1,39 @@
+{% extends 'admin_panel/base_admin.html' %}
+{% block title %}View Appointments{% endblock %}
+{% block breadcrumb %}Home / Appointments{% endblock %}
+{% block content %}
+<div class="section">
+    <div class="section-header"><h2>All Appointments ({{ appointments.count }})</h2></div>
+    <div class="filter-bar">
+        <form method="GET" class="filter-form">
+            <input type="date" name="date" value="{{ filter_date }}" class="filter-input">
+            <select name="doctor" class="filter-input">
+                <option value="">All Doctors</option>
+                {% for doc in doctors %}<option value="{{ doc.docid }}" {% if filter_doctor == doc.docid|stringformat:"s" %}selected{% endif %}>{{ doc.docname }}</option>{% endfor %}
+            </select>
+            <button type="submit" class="btn btn-primary">Filter</button>
+            {% if filter_date or filter_doctor %}<a href="/admin-panel/appointments/" class="btn btn-secondary">Clear</a>{% endif %}
+        </form>
+    </div>
+    {% if appointments %}
+    <div class="table-container">
+        <table class="data-table">
+            <thead><tr><th>Reference</th><th>Patient</th><th>Doctor</th><th>Session</th><th>Appt. No.</th><th>Booked</th><th>Scheduled</th></tr></thead>
+            <tbody>
+            {% for appt in appointments %}
+            <tr>
+                <td><strong>OC-000-{{ appt.appoid }}</strong></td>
+                <td>{{ appt.pid.pname }}</td>
+                <td>{{ appt.scheduleid.docid.docname }}</td>
+                <td>{{ appt.scheduleid.title }}</td>
+                <td><span class="badge badge-info">{{ appt.apponum|stringformat:"03d" }}</span></td>
+                <td>{{ appt.appodate }}</td>
+                <td>{{ appt.scheduleid.scheduledate }} {{ appt.scheduleid.scheduletime }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}<p class="no-data">No appointments found.</p>{% endif %}
+</div>
+{% endblock %}

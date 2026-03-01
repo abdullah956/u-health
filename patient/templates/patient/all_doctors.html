@@ -1,0 +1,137 @@
+{% extends 'patient/base_patient.html' %}
+
+{% block title %}All Doctors{% endblock %}
+
+{% block breadcrumb %}Home / All Doctors{% endblock %}
+
+{% block content %}
+<div class="section">
+    <div class="section-header">
+        <h2>All Doctors ({{ doctors.count }})</h2>
+    </div>
+
+    <div class="filter-bar">
+        <form method="GET" action="/patient/doctors/" class="search-form">
+            <input
+                type="text"
+                name="search"
+                placeholder="Search by doctor name or email..."
+                value="{{ search_query }}"
+                list="doctor-suggestions"
+                class="search-input"
+            >
+            <datalist id="doctor-suggestions">
+                {% for suggestion in doctor_suggestions %}
+                <option value="{{ suggestion }}">
+                {% endfor %}
+            </datalist>
+            <button type="submit" class="btn btn-primary">Search</button>
+            {% if search_query %}
+            <a href="/patient/doctors/" class="btn btn-secondary">Clear</a>
+            {% endif %}
+        </form>
+    </div>
+
+    {% if doctors %}
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Doctor Name</th>
+                    <th>Email</th>
+                    <th>Specialties</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for doctor in doctors %}
+                <tr>
+                    <td>{{ doctor.docname }}</td>
+                    <td>{{ doctor.docemail.email }}</td>
+                    <td><span class="badge badge-info">{{ doctor.specialties.sname }}</span></td>
+                    <td>
+                        <button onclick="showDoctorDetails({{ doctor.docid }})" class="btn btn-sm btn-primary">View</button>
+                        <button onclick="showSessionsConfirm('{{ doctor.docname }}')" class="btn btn-sm btn-success">Sessions</button>
+                    </td>
+                </tr>
+
+                <!-- Doctor Details Popup -->
+                <div id="doctor-popup-{{ doctor.docid }}" class="popup-overlay">
+                    <div class="popup-card">
+                        <div class="popup-header">
+                            <h3>Doctor Details</h3>
+                            <button onclick="closePopup('doctor-popup-{{ doctor.docid }}')" class="close-btn">&times;</button>
+                        </div>
+                        <div class="popup-body">
+                            <div class="detail-row">
+                                <span class="detail-label">Name:</span>
+                                <span class="detail-value">{{ doctor.docname }}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Email:</span>
+                                <span class="detail-value">{{ doctor.docemail.email }}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">NIC:</span>
+                                <span class="detail-value">{{ doctor.docnic }}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Phone:</span>
+                                <span class="detail-value">{{ doctor.doctel }}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Specialty:</span>
+                                <span class="detail-value">{{ doctor.specialties.sname }}</span>
+                            </div>
+                        </div>
+                        <div class="popup-footer">
+                            <button onclick="closePopup('doctor-popup-{{ doctor.docid }}')" class="btn btn-secondary">Close</button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="no-data">No doctors found.</p>
+    {% endif %}
+</div>
+
+<!-- Sessions Confirmation Popup -->
+<div id="sessions-confirm-popup" class="popup-overlay">
+    <div class="popup-card">
+        <div class="popup-header">
+            <h3>View Doctor Sessions</h3>
+            <button onclick="closePopup('sessions-confirm-popup')" class="close-btn">&times;</button>
+        </div>
+        <div class="popup-body">
+            <p>Do you want to view scheduled sessions for <strong id="selected-doctor-name"></strong>?</p>
+        </div>
+        <div class="popup-footer">
+            <button onclick="goToSessions()" class="btn btn-primary">Yes, View Sessions</button>
+            <button onclick="closePopup('sessions-confirm-popup')" class="btn btn-secondary">Cancel</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let selectedDoctorName = '';
+
+function showDoctorDetails(doctorId) {
+    showPopup('doctor-popup-' + doctorId);
+}
+
+function showSessionsConfirm(doctorName) {
+    selectedDoctorName = doctorName;
+    document.getElementById('selected-doctor-name').textContent = doctorName;
+    showPopup('sessions-confirm-popup');
+}
+
+function goToSessions() {
+    window.location.href = '/patient/schedule/?doctor=' + encodeURIComponent(selectedDoctorName);
+}
+</script>
+{% endblock %}

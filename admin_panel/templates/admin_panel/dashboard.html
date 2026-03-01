@@ -1,0 +1,67 @@
+{% extends 'admin_panel/base_admin.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block breadcrumb %}Home / Dashboard{% endblock %}
+
+{% block content %}
+<div class="section">
+    <h2>System Overview</h2>
+</div>
+
+<div class="dashboard-grid">
+    <div class="stats-card">
+        <div class="stat-icon">👨‍⚕️</div>
+        <div class="stat-info">
+            <h3>{{ total_doctors }}</h3>
+            <p>Total Doctors</p>
+        </div>
+    </div>
+
+    <div class="stats-card">
+        <div class="stat-icon">👤</div>
+        <div class="stat-info">
+            <h3>{{ total_patients }}</h3>
+            <p>Total Patients</p>
+        </div>
+    </div>
+
+    <div class="stats-card">
+        <div class="stat-icon">📅</div>
+        <div class="stat-info">
+            <h3>{{ total_sessions }}</h3>
+            <p>Total Sessions</p>
+        </div>
+    </div>
+
+    <div class="stats-card">
+        <div class="stat-icon">📋</div>
+        <div class="stat-info">
+            <h3>{{ total_appointments }}</h3>
+            <p>Total Appointments</p>
+        </div>
+    </div>
+</div>
+
+<div class="quick-actions">
+    <h2>Quick Actions</h2>
+    <div class="action-buttons">
+        <a href="/admin-panel/doctors/" class="action-btn">
+            <span>👨‍⚕️</span>
+            <span>Manage Doctors</span>
+        </a>
+        <a href="/admin-panel/patients/" class="action-btn">
+            <span>👤</span>
+            <span>Manage Patients</span>
+        </a>
+        <a href="/admin-panel/schedule/" class="action-btn">
+            <span>📅</span>
+            <span>Manage Sessions</span>
+        </a>
+        <a href="/admin-panel/appointments/" class="action-btn">
+            <span>📋</span>
+            <span>View Appointments</span>
+        </a>
+    </div>
+</div>
+{% endblock %}

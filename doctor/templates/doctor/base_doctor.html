@@ -1,0 +1,95 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Doctor Portal{% endblock %} - HMS</title>
+    <link rel="stylesheet" href="{% static 'css/admin.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>HMS</h2>
+                <p>Doctor Portal</p>
+            </div>
+
+            <div class="profile-section">
+                <img src="{% static 'images/user.png' %}" alt="Profile" class="profile-img">
+                <div class="profile-info">
+                    <h3 class="profile-name">Dr. {{ doctor.docname|truncatechars:13 }}</h3>
+                    <p class="profile-email">{{ doctor.docemail.email|truncatechars:22 }}</p>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="/doctor/" class="nav-item {% if request.path == '/doctor/' %}active{% endif %}">
+                    <span class="nav-icon">🏠</span>
+                    <span class="nav-text">Home</span>
+                </a>
+                <a href="/doctor/schedule/" class="nav-item {% if 'schedule' in request.path %}active{% endif %}">
+                    <span class="nav-icon">📅</span>
+                    <span class="nav-text">My Sessions</span>
+                </a>
+                <a href="/doctor/appointments/" class="nav-item {% if 'appointments' in request.path %}active{% endif %}">
+                    <span class="nav-icon">📋</span>
+                    <span class="nav-text">Appointments</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="/logout/" class="logout-btn">
+                    <span class="nav-icon">🚪</span>
+                    <span class="nav-text">Logout</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="top-bar">
+                <div class="breadcrumb">
+                    {% block breadcrumb %}Doctor Portal{% endblock %}
+                </div>
+                <div class="current-date">
+                    <span id="current-date"></span>
+                </div>
+            </div>
+
+            <div class="content-area">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Display current date
+        const dateElement = document.getElementById('current-date');
+        const today = new Date();
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        dateElement.textContent = today.toLocaleDateString('en-US', options);
+
+        // Popup functions
+        function showPopup(popupId) {
+            document.getElementById(popupId).style.display = 'flex';
+        }
+
+        function closePopup(popupId) {
+            document.getElementById(popupId).style.display = 'none';
+        }
+
+        // Close popup when clicking outside
+        window.onclick = function(event) {
+            if (event.target.className === 'popup-overlay') {
+                event.target.style.display = 'none';
+            }
+        }
+    </script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

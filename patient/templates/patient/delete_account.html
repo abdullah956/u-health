@@ -1,0 +1,37 @@
+{% extends 'patient/base_patient.html' %}
+
+{% block title %}Delete Account{% endblock %}
+
+{% block breadcrumb %}Home / Settings / Delete Account{% endblock %}
+
+{% block content %}
+<div class="section">
+    <div class="confirm-card">
+        <div class="confirm-icon danger">🗑️</div>
+        <h2>Delete Account</h2>
+
+        <div class="warning-message large">
+            <span class="warning-icon">⚠️</span>
+            <p><strong>Warning:</strong> This action is permanent and cannot be undone!</p>
+        </div>
+
+        <div class="delete-consequences">
+            <h3>What will be deleted:</h3>
+            <ul>
+                <li>Your personal information</li>
+                <li>All your appointment bookings</li>
+                <li>Your account access</li>
+                <li>All associated data</li>
+            </ul>
+        </div>
+
+        <div class="confirm-actions">
+            <form method="POST" action="/patient/settings/delete/">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">I Understand, Delete My Account</button>
+                <a href="/patient/settings/" class="btn btn-secondary">Cancel, Keep My Account</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

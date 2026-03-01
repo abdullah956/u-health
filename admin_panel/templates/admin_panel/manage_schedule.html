@@ -1,0 +1,33 @@
+{% extends 'admin_panel/base_admin.html' %}
+{% block title %}Manage Sessions{% endblock %}
+{% block breadcrumb %}Home / Sessions{% endblock %}
+{% block content %}
+<div class="section">
+    <div class="section-header">
+        <h2>Manage Sessions ({{ schedules.count }})</h2>
+        <a href="/admin-panel/schedule/add/" class="btn btn-primary">Add Session</a>
+    </div>
+    {% if request.GET.added %}<div class="alert alert-success">✓ Session added successfully!</div>{% endif %}
+    {% if request.GET.deleted %}<div class="alert alert-success">✓ Session deleted successfully!</div>{% endif %}
+    {% if schedules %}
+    <div class="table-container">
+        <table class="data-table">
+            <thead><tr><th>Title</th><th>Doctor</th><th>Date</th><th>Time</th><th>Slots</th><th>Appointments</th><th>Actions</th></tr></thead>
+            <tbody>
+            {% for schedule in schedules %}
+            <tr>
+                <td>{{ schedule.title }}</td>
+                <td>{{ schedule.docid.docname }}</td>
+                <td>{{ schedule.scheduledate }}</td>
+                <td>{{ schedule.scheduletime }}</td>
+                <td>{{ schedule.nop }}</td>
+                <td><span class="badge badge-info">{{ schedule.appointment_count }}</span></td>
+                <td><a href="/admin-panel/schedule/delete/{{ schedule.scheduleid }}/" class="btn btn-sm btn-danger">Delete</a></td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}<p class="no-data">No sessions found.</p>{% endif %}
+</div>
+{% endblock %}

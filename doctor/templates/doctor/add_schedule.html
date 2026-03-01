@@ -1,0 +1,80 @@
+{% extends 'doctor/base_doctor.html' %}
+
+{% block title %}Add New Session{% endblock %}
+
+{% block breadcrumb %}Home / My Sessions / Add New{% endblock %}
+
+{% block content %}
+<div class="section">
+    <div class="section-header">
+        <h2>Add New Session</h2>
+    </div>
+
+    {% if error %}
+    <div class="alert alert-error">
+        {{ error }}
+    </div>
+    {% endif %}
+
+    <div class="form-container">
+        <form method="POST" action="/doctor/schedule/add/" class="settings-form">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="title">Session Title</label>
+                <input type="text" id="title" name="title" class="form-input" placeholder="e.g., General Consultation" required>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="scheduledate">Date</label>
+                    <input type="date" id="scheduledate" name="scheduledate" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="scheduletime">Time</label>
+                    <input type="time" id="scheduletime" name="scheduletime" class="form-input" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="nop">Number of Slots</label>
+                <input type="number" id="nop" name="nop" min="1" max="100" class="form-input" placeholder="e.g., 10" required>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Create Session</button>
+                <a href="/doctor/schedule/" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% block extra_css %}
+<style>
+.welcome-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+}
+
+.welcome-card h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.welcome-date {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin-bottom: 0.5rem;
+}
+
+.welcome-specialty {
+    font-size: 1rem;
+    opacity: 0.9;
+}
+</style>
+{% endblock %}
+{% endblock %}

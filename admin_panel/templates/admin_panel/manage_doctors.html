@@ -1,0 +1,36 @@
+{% extends 'admin_panel/base_admin.html' %}
+{% block title %}Manage Doctors{% endblock %}
+{% block breadcrumb %}Home / Doctors{% endblock %}
+{% block content %}
+<div class="section">
+    <div class="section-header">
+        <h2>Manage Doctors ({{ doctors.count }})</h2>
+        <a href="/admin-panel/doctors/add/" class="btn btn-primary">Add Doctor</a>
+    </div>
+    {% if request.GET.added %}<div class="alert alert-success">✓ Doctor added successfully!</div>{% endif %}
+    {% if request.GET.updated %}<div class="alert alert-success">✓ Doctor updated successfully!</div>{% endif %}
+    {% if request.GET.deleted %}<div class="alert alert-success">✓ Doctor deleted successfully!</div>{% endif %}
+    {% if doctors %}
+    <div class="table-container">
+        <table class="data-table">
+            <thead><tr><th>Name</th><th>Email</th><th>Specialty</th><th>NIC</th><th>Phone</th><th>Actions</th></tr></thead>
+            <tbody>
+            {% for doctor in doctors %}
+            <tr>
+                <td>{{ doctor.docname }}</td>
+                <td>{{ doctor.docemail.email }}</td>
+                <td><span class="badge badge-info">{{ doctor.specialties.sname }}</span></td>
+                <td>{{ doctor.docnic }}</td>
+                <td>{{ doctor.doctel }}</td>
+                <td>
+                    <a href="/admin-panel/doctors/edit/{{ doctor.docid }}/" class="btn btn-sm btn-primary">Edit</a>
+                    <a href="/admin-panel/doctors/delete/{{ doctor.docid }}/" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}<p class="no-data">No doctors found.</p>{% endif %}
+</div>
+{% endblock %}

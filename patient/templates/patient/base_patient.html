@@ -1,0 +1,103 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Patient Portal{% endblock %} - HMS</title>
+    <link rel="stylesheet" href="{% static 'css/admin.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>HMS</h2>
+                <p>Patient Portal</p>
+            </div>
+
+            <div class="profile-section">
+                <img src="{% static 'images/user.png' %}" alt="Profile" class="profile-img">
+                <div class="profile-info">
+                    <h3 class="profile-name">{{ patient.pname|truncatechars:13 }}</h3>
+                    <p class="profile-email">{{ patient.pemail.email|truncatechars:22 }}</p>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="/patient/" class="nav-item {% if request.path == '/patient/' %}active{% endif %}">
+                    <span class="nav-icon">🏠</span>
+                    <span class="nav-text">Home</span>
+                </a>
+                <a href="/patient/doctors/" class="nav-item {% if 'doctors' in request.path %}active{% endif %}">
+                    <span class="nav-icon">👨‍⚕️</span>
+                    <span class="nav-text">All Doctors</span>
+                </a>
+                <a href="/patient/schedule/" class="nav-item {% if 'schedule' in request.path %}active{% endif %}">
+                    <span class="nav-icon">📅</span>
+                    <span class="nav-text">Scheduled Sessions</span>
+                </a>
+                <a href="/patient/appointment/" class="nav-item {% if 'appointment' in request.path and 'cancel' not in request.path %}active{% endif %}">
+                    <span class="nav-icon">📋</span>
+                    <span class="nav-text">My Bookings</span>
+                </a>
+                <a href="/patient/settings/" class="nav-item {% if 'settings' in request.path %}active{% endif %}">
+                    <span class="nav-icon">⚙️</span>
+                    <span class="nav-text">Settings</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="/logout/" class="logout-btn">
+                    <span class="nav-icon">🚪</span>
+                    <span class="nav-text">Logout</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="top-bar">
+                <div class="breadcrumb">
+                    {% block breadcrumb %}Patient Portal{% endblock %}
+                </div>
+                <div class="current-date">
+                    <span id="current-date"></span>
+                </div>
+            </div>
+
+            <div class="content-area">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Display current date
+        const dateElement = document.getElementById('current-date');
+        const today = new Date();
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        dateElement.textContent = today.toLocaleDateString('en-US', options);
+
+        // Popup functions
+        function showPopup(popupId) {
+            document.getElementById(popupId).style.display = 'flex';
+        }
+
+        function closePopup(popupId) {
+            document.getElementById(popupId).style.display = 'none';
+        }
+
+        // Close popup when clicking outside
+        window.onclick = function(event) {
+            if (event.target.className === 'popup-overlay') {
+                event.target.style.display = 'none';
+            }
+        }
+    </script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

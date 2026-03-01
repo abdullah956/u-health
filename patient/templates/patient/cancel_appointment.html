@@ -1,0 +1,50 @@
+{% extends 'patient/base_patient.html' %}
+
+{% block title %}Cancel Appointment{% endblock %}
+
+{% block breadcrumb %}Home / My Bookings / Cancel{% endblock %}
+
+{% block content %}
+<div class="section">
+    <div class="confirm-card">
+        <div class="confirm-icon warning">⚠️</div>
+        <h2>Cancel Appointment</h2>
+        <p>Are you sure you want to cancel this appointment?</p>
+
+        <div class="appointment-summary">
+            <div class="detail-row">
+                <span class="detail-label">Reference:</span>
+                <span class="detail-value">OC-000-{{ appointment.appoid }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Session:</span>
+                <span class="detail-value">{{ appointment.scheduleid.title }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Doctor:</span>
+                <span class="detail-value">{{ appointment.scheduleid.docid.docname }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Date:</span>
+                <span class="detail-value">{{ appointment.scheduleid.scheduledate }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Time:</span>
+                <span class="detail-value">{{ appointment.scheduleid.scheduletime }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Appointment Number:</span>
+                <span class="detail-value">{{ appointment.apponum|stringformat:"03d" }}</span>
+            </div>
+        </div>
+
+        <div class="confirm-actions">
+            <form method="POST" action="/patient/appointment/cancel/{{ appointment.appoid }}/">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Yes, Cancel Appointment</button>
+                <a href="/patient/appointment/" class="btn btn-secondary">No, Go Back</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

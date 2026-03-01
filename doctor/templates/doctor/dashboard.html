@@ -1,0 +1,78 @@
+{% extends 'doctor/base_doctor.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block breadcrumb %}Home / Dashboard{% endblock %}
+
+{% block content %}
+<div class="section">
+    <div class="welcome-card">
+        <h1>Welcome, Dr. {{ doctor.docname }}!</h1>
+        <p class="welcome-date">Today is {{ today|date:"l, F d, Y" }}</p>
+        <p class="welcome-specialty">Specialty: <strong>{{ doctor.specialties.sname }}</strong></p>
+    </div>
+</div>
+
+<div class="dashboard-grid">
+    <div class="stats-card">
+        <div class="stat-icon">📅</div>
+        <div class="stat-info">
+            <h3>{{ total_sessions }}</h3>
+            <p>Total Sessions</p>
+        </div>
+    </div>
+
+    <div class="stats-card">
+        <div class="stat-icon">📋</div>
+        <div class="stat-info">
+            <h3>{{ total_appointments }}</h3>
+            <p>Total Appointments</p>
+        </div>
+    </div>
+</div>
+
+<div class="quick-actions">
+    <h2>Quick Actions</h2>
+    <div class="action-buttons">
+        <a href="/doctor/schedule/" class="action-btn">
+            <span>📅</span>
+            <span>Manage Sessions</span>
+        </a>
+        <a href="/doctor/schedule/add/" class="action-btn">
+            <span>➕</span>
+            <span>Add New Session</span>
+        </a>
+        <a href="/doctor/appointments/" class="action-btn">
+            <span>📋</span>
+            <span>View Appointments</span>
+        </a>
+    </div>
+</div>
+
+{% block extra_css %}
+<style>
+.welcome-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 12px;
+}
+
+.welcome-card h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.welcome-date {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin-bottom: 0.5rem;
+}
+
+.welcome-specialty {
+    font-size: 1rem;
+    opacity: 0.9;
+}
+</style>
+{% endblock %}
+{% endblock %}

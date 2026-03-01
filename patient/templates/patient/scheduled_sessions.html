@@ -1,0 +1,128 @@
+{% extends 'patient/base_patient.html' %}
+
+{% block title %}Scheduled Sessions{% endblock %}
+
+{% block breadcrumb %}Home / Scheduled Sessions{% endblock %}
+
+{% block content %}
+<div class="section">
+    <div class="section-header">
+        <h2>Scheduled Sessions</h2>
+    </div>
+
+    <div class="filter-bar">
+        <form method="GET" action="/patient/schedule/" class="filter-form">
+            <input
+                type="date"
+                name="date"
+                value="{{ filter_date }}"
+                class="filter-input"
+            >
+            {% if doctor_name %}
+            <input type="hidden" name="doctor" value="{{ doctor_name }}">
+            {% endif %}
+            <button type="submit" class="btn btn-primary">Filter</button>
+            {% if filter_date or doctor_name %}
+            <a href="/patient/schedule/" class="btn btn-secondary">Clear Filters</a>
+            {% endif %}
+        </form>
+        {% if doctor_name %}
+        <div class="filter-info">
+            Showing sessions for: <strong>{{ doctor_name }}</strong>
+        </div>
+        {% endif %}
+    </div>
+
+    {% if success %}
+    <div class="alert alert-success">
+        ✓ Appointment booked successfully! Your appointment number is <strong>{{ appointment_number|stringformat:"03d" }}</strong> for session "{{ schedule_title }}".
+    </div>
+    {% endif %}
+
+    {% if error %}
+    <div class="alert alert-error">
+        {{ error }}
+    </div>
+    {% endif %}
+
+    {% if schedules %}
+    <div class="sessions-grid">
+        {% for schedule in schedules %}
+        <div class="session-card">
+            <div class="session-header">
+                <h3>{{ schedule.title }}</h3>
+                <span class="session-date">{{ schedule.scheduledate }}</span>
+            </div>
+            <div class="session-body">
+                <div class="session-detail">
+                    <span class="icon">👨‍⚕️</span>
+                    <span>{{ schedule.docid.docname }}</span>
+                </div>
+                <div class="session-detail">
+                    <span class="icon">🏥</span>
+                    <span>{{ schedule.docid.specialties.sname }}</span>
+                </div>
+                <div class="session-detail">
+                    <span class="icon">🕐</span>
+                    <span>{{ schedule.scheduletime }}</span>
+                </div>
+                <div class="session-detail">
+                    <span class="icon">👥</span>
+                    <span>{{ schedule.nop }} slots available</span>
+                </div>
+            </div>
+            <div class="session-footer">
+                <button onclick="showBookingConfirm({{ schedule.scheduleid }}, '{{ schedule.title }}', '{{ schedule.docid.docname }}')" class="btn btn-primary btn-block">
+                    Book Now
+                </button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="no-data">No scheduled sessions available at the moment.</p>
+    {% endif %}
+</div>
+
+<!-- Booking Confirmation Popup -->
+<div id="booking-confirm-popup" class="popup-overlay">
+    <div class="popup-card">
+        <div class="popup-header">
+            <h3>Confirm Booking</h3>
+            <button onclick="closePopup('booking-confirm-popup')" class="close-btn">&times;</button>
+        </div>
+        <div class="popup-body">
+            <p>Are you sure you want to book an appointment for:</p>
+            <div class="booking-details">
+                <div class="detail-row">
+                    <span class="detail-label">Session:</span>
+                    <span class="detail-value" id="booking-session"></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Doctor:</span>
+                    <span class="detail-value" id="booking-doctor"></span>
+                </div>
+            </div>
+        </div>
+        <div class="popup-footer">
+            <form method="POST" action="/patient/schedule/" id="booking-form">
+                {% csrf_token %}
+                <input type="hidden" name="schedule_id" id="schedule-id-input">
+                <button type="submit" class="btn btn-primary">Confirm Booking</button>
+                <button type="button" onclick="closePopup('booking-confirm-popup')" class="btn btn-secondary">Cancel</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function showBookingConfirm(scheduleId, sessionTitle, doctorName) {
+    document.getElementById('booking-session').textContent = sessionTitle;
+    document.getElementById('booking-doctor').textContent = doctorName;
+    document.getElementById('schedule-id-input').value = scheduleId;
+    showPopup('booking-confirm-popup');
+}
+</script>
+{% endblock %}

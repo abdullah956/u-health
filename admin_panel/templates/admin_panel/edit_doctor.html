@@ -1,0 +1,44 @@
+{% extends 'admin_panel/base_admin.html' %}
+{% block title %}Edit Doctor{% endblock %}
+{% block breadcrumb %}Home / Doctors / Edit{% endblock %}
+{% block content %}
+<div class="section">
+    <div class="section-header"><h2>Edit Doctor</h2></div>
+    {% if error %}<div class="alert alert-error">{{ error }}</div>{% endif %}
+    <div class="form-container">
+        <form method="POST" class="settings-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>Email</label>
+                <input type="text" value="{{ doctor.docemail.email }}" class="form-input" disabled>
+            </div>
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" value="{{ doctor.docname }}" class="form-input" required>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="nic">NIC</label>
+                    <input type="text" id="nic" name="nic" value="{{ doctor.docnic }}" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone</label>
+                    <input type="tel" id="phone" name="phone" value="{{ doctor.doctel }}" class="form-input" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="specialty">Specialty</label>
+                <select id="specialty" name="specialty" class="form-input" required>
+                    {% for s in specialties %}
+                    <option value="{{ s.id }}" {% if s.id == doctor.specialties.id %}selected{% endif %}>{{ s.sname }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Update Doctor</button>
+                <a href="/admin-panel/doctors/" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

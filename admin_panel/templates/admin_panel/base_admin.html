@@ -1,0 +1,103 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin Panel{% endblock %} - HMS</title>
+    <link rel="stylesheet" href="{% static 'css/admin.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>HMS</h2>
+                <p>Admin Panel</p>
+            </div>
+
+            <div class="profile-section">
+                <img src="{% static 'images/user.png' %}" alt="Profile" class="profile-img">
+                <div class="profile-info">
+                    <h3 class="profile-name">Administrator</h3>
+                    <p class="profile-email">admin@hms.com</p>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="/admin-panel/" class="nav-item {% if request.path == '/admin-panel/' or request.path == '/admin/' %}active{% endif %}">
+                    <span class="nav-icon">🏠</span>
+                    <span class="nav-text">Home</span>
+                </a>
+                <a href="/admin-panel/doctors/" class="nav-item {% if 'doctors' in request.path %}active{% endif %}">
+                    <span class="nav-icon">👨‍⚕️</span>
+                    <span class="nav-text">Doctors</span>
+                </a>
+                <a href="/admin-panel/patients/" class="nav-item {% if 'patients' in request.path %}active{% endif %}">
+                    <span class="nav-icon">👤</span>
+                    <span class="nav-text">Patients</span>
+                </a>
+                <a href="/admin-panel/schedule/" class="nav-item {% if 'schedule' in request.path and 'admin-panel' in request.path %}active{% endif %}">
+                    <span class="nav-icon">📅</span>
+                    <span class="nav-text">Sessions</span>
+                </a>
+                <a href="/admin-panel/appointments/" class="nav-item {% if 'appointments' in request.path and 'admin-panel' in request.path %}active{% endif %}">
+                    <span class="nav-icon">📋</span>
+                    <span class="nav-text">Appointments</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="/logout/" class="logout-btn">
+                    <span class="nav-icon">🚪</span>
+                    <span class="nav-text">Logout</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="top-bar">
+                <div class="breadcrumb">
+                    {% block breadcrumb %}Admin Panel{% endblock %}
+                </div>
+                <div class="current-date">
+                    <span id="current-date"></span>
+                </div>
+            </div>
+
+            <div class="content-area">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Display current date
+        const dateElement = document.getElementById('current-date');
+        const today = new Date();
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        dateElement.textContent = today.toLocaleDateString('en-US', options);
+
+        // Popup functions
+        function showPopup(popupId) {
+            document.getElementById(popupId).style.display = 'flex';
+        }
+
+        function closePopup(popupId) {
+            document.getElementById(popupId).style.display = 'none';
+        }
+
+        // Close popup when clicking outside
+        window.onclick = function(event) {
+            if (event.target.className === 'popup-overlay') {
+                event.target.style.display = 'none';
+            }
+        }
+    </script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
